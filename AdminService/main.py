@@ -22,6 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Index health check
 @app.get('/')
 def index():
