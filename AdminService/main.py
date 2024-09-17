@@ -3,6 +3,10 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.routes.user_route import user_router
+
+# logging.basicConfig(level=logging.INFO)
+
 
 app = FastAPI(
     title="BookNest Admin API",
@@ -27,3 +31,6 @@ app.add_middleware(
 @app.get('/')
 def index():
     return {"message": "BookNest Admin API"}
+
+
+app.include_router(user_router)
