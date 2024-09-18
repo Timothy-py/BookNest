@@ -15,6 +15,7 @@ class AddBook(BaseModel):
     publisher: str = Field(..., min_length=3, max_length=250)
     category_ids: List[str] = Field(..., min_items=1)
     quantity: int = Field(..., gt=0)
+    is_available: bool = Field(default=True)
 
     class Config:
         json_schema_extra = {
@@ -36,5 +37,6 @@ class BookResponse(BaseModel):
     publisher: str
     category_ids: List[str]
     quantity: int
+    is_available: bool
     # created_at: datetime
     # updated_at: datetime

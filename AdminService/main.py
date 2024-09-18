@@ -14,7 +14,6 @@ from app.routes.book_route import book_router
 app = FastAPI(
     title="BookNest Admin API",
     version="1.0.0",
-    servers=[{"url": "/api/v1", "name": "Default Server"}],
     description="BookNest Admin API",
     debug=True,
     docs_url="/docs",
