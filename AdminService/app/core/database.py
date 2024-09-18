@@ -1,4 +1,4 @@
-import asyncio
+
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.server_api import ServerApi
 
@@ -21,7 +21,7 @@ async def connect_to_mongo_db():
         await client.admin.command(command="ping")
         print("Pinged your deployment. You successfully connected to MongoDB!")
     except Exception as e:
-            print(f"Error connecting to MongoDB: {e}")
+        print(e)
 
 
 async def close_mongo_db_connection():

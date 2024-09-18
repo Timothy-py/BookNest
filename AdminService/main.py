@@ -1,4 +1,5 @@
 import asyncio
+from contextlib import asynccontextmanager
 import logging
 
 from fastapi import FastAPI
@@ -11,7 +12,16 @@ from app.routes.book_route import book_router
 # logging.basicConfig(level=logging.INFO)
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # PInd DB
+    await connect_to_mongo_db()
+    yield
+    # Close DB
+    await close_mongo_db_connection()
+
 app = FastAPI(
+    lifespan=lifespan,
     title="BookNest Admin API",
     version="1.0.0",
     description="BookNest Admin API",
@@ -28,17 +38,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Start event handlers
-@app.on_event("startup")
-async def startup_db_client():
-    await connect_to_mongo_db()
-
-
-# Shutdown event handlers
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    await close_mongo_db_connection()
 
 # Index health check
 @app.get('/')
