@@ -1,9 +1,13 @@
 from fastapi import APIRouter, status
 
 
+from app.schemas.book_schema import BookResponse, AddBook
+from app.services.book_service import BookService
+
 book_router = APIRouter(prefix="/api/v1/books", tags=["Books"])
 
 
-@book_router.get("/", status_code=status.HTTP_200_OK)
-async def add_book():
-    return {"message": "Hello World"}
+# ADD A BOOK
+@book_router.post(path="/", response_model=BookResponse, status_code=status.HTTP_201_CREATED)
+async def add_book(book: AddBook):
+    return await BookService.add_book(book)
