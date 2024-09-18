@@ -10,5 +10,5 @@ class BookRepository:
     async def get_book_by_id(book_id:str) -> dict:
         return await book_collection.find_one(filter={"_id": ObjectId(oid=book_id)})
 
-    async def get_books_by_filter(filter):
-        pass
+    async def delete_book_by_id(book_id:str):
+        return await book_collection.delete_one(filter={"_id": ObjectId(oid=book_id)} )

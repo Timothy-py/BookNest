@@ -21,3 +21,8 @@ class BookService:
         result = await BookRepository.get_book_by_id(new_book.inserted_id)
         
         return result
+    
+    # DELETE A BOOK
+    async def delete_book(book_id):
+        await BookRepository.delete_book_by_id(book_id)
+        return
