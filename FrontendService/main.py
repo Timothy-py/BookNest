@@ -1,10 +1,22 @@
+from contextlib import asynccontextmanager
 import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.core.database import close_database, ping_database
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Ping DB
+    await ping_database()
+    yield
+    # Close DB
+    await close_database()
 
 app = FastAPI(
+    lifespan=lifespan,
     title="BookNest Frontend API",
     version="1.0.0",
     description="BookNest Frontend API",
