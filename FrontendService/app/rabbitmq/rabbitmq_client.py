@@ -2,7 +2,7 @@ import json
 import asyncio
 
 
-from aio_pika import Connection, Channel, connect, Message, IncomingMessage
+from aio_pika import Connection, Channel, connect_robust, Message, IncomingMessage
 
 from app.core.config import env_vars
 
@@ -23,7 +23,7 @@ class RabbitMQClient:
     
     async def connect(self):
         if not self.connection or self.connection.is_closed:
-            self.connection = await connect(self.amqp_url)
+            self.connection = await connect_robust(self.amqp_url)
             self.channel = await self.connection.channel()
         print("RabbitMQ connection established!")
             
@@ -42,7 +42,7 @@ class RabbitMQClient:
     async def consume(self, queue_name: str):
         await self.connect()
         channel = await self.connection.channel()
-        queue = await self.channel.declare_queue(queue_name, durable=True)
+        queue = await channel.declare_queue(queue_name, durable=True)
         await queue.consume(self.on_message, no_ack=False)
         
     async def start_consume(self, queue_name: str):
