@@ -8,17 +8,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import close_mongo_db_connection, connect_to_mongo_db
 from app.routes.user_route import user_router
 from app.routes.book_route import book_router
-
-# logging.basicConfig(level=logging.INFO)
+from app.core.dependencies import rabbitmq_client
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # PInd DB
     await connect_to_mongo_db()
+    await rabbitmq_client.connect()
     yield
-    # Close DB
     await close_mongo_db_connection()
+    await rabbitmq_client.close()
 
 app = FastAPI(
     lifespan=lifespan,
