@@ -1,9 +1,9 @@
 
 
-from app.rabbitmq.producer import RabbitMQProducer
+from app.rabbitmq.rabbitmq_client import RabbitMQClient
 
 
-rabbitmq_producer = RabbitMQProducer()
+rabbitmq_client = RabbitMQClient()
 
-def get_rabbitmq_producer():
-    return rabbitmq_producer
+def get_rabbitmq_client():
+    return rabbitmq_client

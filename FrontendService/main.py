@@ -5,18 +5,18 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.database import close_database, create_tables, ping_database
 from app.routes.user_route import user_router
-from app.core.dependencies import rabbitmq_producer
+from app.core.dependencies import rabbitmq_client
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await ping_database()
     await create_tables()
-    await rabbitmq_producer.connect()
+    await rabbitmq_client.connect()
     yield
     # Close DB
     await close_database()
-    await rabbitmq_producer.close()
+    await rabbitmq_client.close()
 
 app = FastAPI(
     lifespan=lifespan,
