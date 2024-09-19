@@ -1,30 +1,28 @@
-import asyncio
 from contextlib import asynccontextmanager
-import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.core.database import close_mongo_db_connection, connect_to_mongo_db
+from app.core.database import close_database, create_tables, ping_database
 from app.routes.user_route import user_router
-from app.routes.book_route import book_router
-
-# logging.basicConfig(level=logging.INFO)
+from app.core.dependencies import rabbitmq_client
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # PInd DB
-    await connect_to_mongo_db()
+    await ping_database()
+    await create_tables()
+    await rabbitmq_client.connect()
     yield
     # Close DB
-    await close_mongo_db_connection()
+    await close_database()
+    await rabbitmq_client.close()
 
 app = FastAPI(
     lifespan=lifespan,
-    title="BookNest Admin API",
+    title="BookNest Frontend API",
     version="1.0.0",
-    description="BookNest Admin API",
+    description="BookNest Frontend API",
     debug=True,
     docs_url="/docs",
     redoc_url="/redoc",
@@ -39,11 +37,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Index health check
 @app.get('/')
 def index():
-    return {"message": "BookNest Admin API"}
-
+    return {"message": "BookNest Frontend API"}
 
 app.include_router(user_router)
-app.include_router(book_router)
