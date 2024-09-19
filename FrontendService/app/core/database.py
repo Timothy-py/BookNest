@@ -1,6 +1,3 @@
-from contextlib import asynccontextmanager
-
-
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy import text
@@ -16,8 +13,6 @@ def async_session_generator():
     return sessionmaker(engine, class_=AsyncSession)
 
 
-# Contex manager to get a session
-@asynccontextmanager
 async def get_session() -> AsyncSession:
     async_session = async_session_generator()
     try: 
@@ -42,3 +37,9 @@ async def ping_database():
 async def close_database():
     await engine.dispose()
     print("Database connection closed!")
+    
+
+async def create_tables():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    print("Database tables created successfully")

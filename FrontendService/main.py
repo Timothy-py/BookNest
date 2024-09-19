@@ -4,13 +4,15 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.core.database import close_database, ping_database
+from app.core.database import close_database, create_tables, ping_database
+from app.routes.user_route import user_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Ping DB
     await ping_database()
+    await create_tables()
     yield
     # Close DB
     await close_database()
@@ -37,3 +39,5 @@ app.add_middleware(
 @app.get('/')
 def index():
     return {"message": "BookNest Frontend API"}
+
+app.include_router(user_router)
