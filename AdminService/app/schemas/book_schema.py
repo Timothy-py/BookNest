@@ -9,9 +9,9 @@ from pydantic import BaseModel, Field, BeforeValidator
 PyObjectId = Annotated[str, BeforeValidator(str)]
 
 class AddBook(BaseModel):
-    title: str = Field(..., min_length=3, max_length=250)
+    title: str = Field(..., min_length=1, max_length=250)
     description: str = Field(..., min_length=3, max_length=250)
-    author: str = Field(..., min_length=3, max_length=250)
+    author: str = Field(..., min_length=1, max_length=250)
     publisher: str = Field(..., min_length=3, max_length=250)
     category_id: str 
     quantity: int = Field(..., gt=0)

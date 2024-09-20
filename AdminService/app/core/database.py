@@ -11,6 +11,7 @@ book_nest_db = client["book_nest_db"]
 
 book_collection = book_nest_db["book_collection"]
 user_collection = book_nest_db["user_collection"]
+category_collection = book_nest_db["category_collection"]
 
 user_collection.create_index("_id", unique=True)
 

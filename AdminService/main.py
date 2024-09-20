@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import close_mongo_db_connection, connect_to_mongo_db
 from app.routes.user_route import user_router
 from app.routes.book_route import book_router
+from app.routes.category_route import category_router
 from app.core.dependencies import rabbitmq_client
 
 
@@ -47,3 +48,4 @@ def index():
 
 app.include_router(user_router)
 app.include_router(book_router)
+app.include_router(category_router)
