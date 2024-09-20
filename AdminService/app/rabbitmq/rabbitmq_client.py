@@ -4,6 +4,7 @@ import asyncio
 
 from aio_pika import Connection, Channel, connect_robust, Message, IncomingMessage
 
+from app.services.user_service import UserService
 from app.core.config import env_vars
 
 
@@ -37,9 +38,10 @@ class RabbitMQClient:
         
     async def on_message(self, message: IncomingMessage):
         async with message.process():
-            data=(message.body)
-            print(data.decode('utf-8'))
-            print(json.loads(data.decode('utf-8')))
+            routing_key = message.routing_key
+            data = json.loads(message.body.decode('utf-8'))
+            if routing_key == 'user_enroll':
+                await UserService.enroll_user(data)
             
     async def consume(self, queue_name: str):
         await self.connect()

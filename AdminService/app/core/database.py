@@ -10,9 +10,7 @@ client = AsyncIOMotorClient(env_vars.MONGODB_URL, server_api=ServerApi(version="
 book_nest_db = client["book_nest_db"]
 
 book_collection = book_nest_db["book_collection"]
-
-# Create index
-# book_collection.create_index([("_id", 1)], unique=True)
+user_collection = book_nest_db["user_collection"]
 
 
 async def connect_to_mongo_db():
