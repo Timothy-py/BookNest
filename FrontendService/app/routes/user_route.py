@@ -14,5 +14,4 @@ user_router = APIRouter(prefix="/api/v1/users", tags=["Users"])
 # Enroll User
 @user_router.post(path="/", response_model=UserSchema, status_code=status.HTTP_201_CREATED)
 async def enroll_user(user: UserEnrollSchema, db: AsyncSession = Depends(get_session), producer:RabbitMQClient = Depends(get_rabbitmq_client)):
-    await producer.publish("user_queue", user.model_dump_json())
-    return await UserService.enroll_user(db, user)
+    return await UserService.enroll_user(db, producer, user)
