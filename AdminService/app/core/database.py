@@ -12,6 +12,8 @@ book_nest_db = client["book_nest_db"]
 book_collection = book_nest_db["book_collection"]
 user_collection = book_nest_db["user_collection"]
 
+user_collection.create_index("_id", unique=True)
+
 
 async def connect_to_mongo_db():
     try:
