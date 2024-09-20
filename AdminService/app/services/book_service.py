@@ -15,7 +15,6 @@ class BookService:
         
         # Save to DB
         new_book = await BookRepository.add_book((book_dict))
-        print(new_book)
         
         # Get inserted book
         result = await BookRepository.get_book_by_id(new_book.inserted_id)
