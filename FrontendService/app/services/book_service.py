@@ -35,3 +35,11 @@ class BookService:
         if book is None:
             raise HTTPException(status_code=404, detail="Book not found")
         return book
+    
+    async def delete_book(book_universal_id: str):
+        async with get_session() as session:
+            result = await session.execute(select(Book).filter(Book.universal_id == book_universal_id))
+            book = result.scalars().first()
+            if book is not None:
+                await session.delete(book)
+                await session.commit()

@@ -45,6 +45,8 @@ class RabbitMQClient:
                 await CategoryService.create_category(data)
             elif routing_key == 'add_book':
                 await BookService.add_book(data)
+            elif routing_key == 'delete_book':
+                await BookService.delete_book(data.get('book_universal_id'))
             
     async def consume(self, queue_name: str):
         await self.connect()
