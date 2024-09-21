@@ -1,5 +1,6 @@
 
 
+from pymongo.errors import DuplicateKeyError
 from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 
@@ -16,6 +17,10 @@ class CategoryService:
             new_catgory = await CategoryRepository.create_category(category_dict)
             
             result = await CategoryRepository.get_cagegory_by_id(new_catgory.inserted_id)
+        except DuplicateKeyError:
+            raise HTTPException(
+                status_code=409, detail="Category already exists"
+            )
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(object=e))
         else:
