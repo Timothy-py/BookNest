@@ -11,5 +11,5 @@ class CategoryRepository:
     async def get_categories():
         return await category_collection.find().to_list(length=None)
     
-    async def get_cagegory_by_id(category_id:str):
-        return await category_collection.find_one(filter={"_id": ObjectId(oid=category_id)})
+    async def get_category_by_universal_id(category_universal_id:str):
+        return await category_collection.find_one({"universal_id": category_universal_id})

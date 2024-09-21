@@ -28,5 +28,6 @@ class CategorySchema(BaseModel):
 
 class CategoryResponse(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    universal_id: str
     title: str
     description: str | None

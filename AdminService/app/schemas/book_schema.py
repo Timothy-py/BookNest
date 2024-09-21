@@ -12,7 +12,7 @@ class AddBook(BaseModel):
     title: str = Field(..., min_length=1, max_length=250)
     author: str = Field(..., min_length=1, max_length=250)
     publisher: str = Field(..., min_length=3, max_length=250)
-    category_id: str 
+    category_universal_id: str 
     quantity: int = Field(..., gt=0)
     is_available: bool = Field(default=True)
 
@@ -23,16 +23,17 @@ class AddBook(BaseModel):
                 "description": "The Alchemist is a novel by the English author Paulo Coelho. It was first published in 1988 and has since become one of the most popular novels in the world.",
                 "author": "Paulo Coelho",
                 "publisher": "Goodreads",
-                "category_id": "64dfc2a7e913c97fdbcbbf2a",
+                "category_universal_id": "5bf5bb1b-2527-4505-9ec7-a203299d6ecd",
                 "quantity": 5
             }
         }
 
 class BookResponse(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    universal_id: str
     title: str
     author: str
     publisher: str
-    category_id: str
+    category_universal_id: str
     quantity: int
     is_available: bool
