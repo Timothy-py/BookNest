@@ -15,6 +15,7 @@ class UserEnrollSchema(BaseModel):
 
 class UserSchema(BaseModel):
     id: int
+    universal_id: str
     email: str
     first_name: str
     last_name: str

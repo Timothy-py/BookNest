@@ -6,10 +6,11 @@ from pydantic import BaseModel
 
 class BookSchema(BaseModel):
     id: int
+    universal_id: str
     title: str
     author: str
     publisher: str
-    category_id: int
+    category_universal_id: str
     quantity: int
     is_available: bool
     

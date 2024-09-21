@@ -10,10 +10,6 @@ from app.services.category_service import CategoryService
 
 class BookService:
     async def add_book(data: dict):
-        category = await CategoryService.get_category_by_title(data.get('category_title'))
-        data['category_id'] = category.id
-        # remove category_title from data
-        del data['category_title']
         async with get_session() as session:
             new_book = Book(**data)
             session.add(new_book)

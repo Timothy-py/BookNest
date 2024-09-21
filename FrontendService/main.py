@@ -14,7 +14,7 @@ async def lifespan(app: FastAPI):
     await ping_database()
     await create_tables()
     await rabbitmq_client.connect()
-    await rabbitmq_client.start_consume(["create_category", "add_book"])
+    await rabbitmq_client.start_consume(["create_category", "add_book", "delete_book"])
     yield
     # Close DB
     await close_database()

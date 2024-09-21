@@ -13,9 +13,10 @@ class CategoryService:
             await session.refresh(new_category)
         return new_category
     
-    async def get_category_by_title(title: str):
-        async with get_session() as session:
-            result = await session.execute(select(Category).filter(Category.title == title))
-            category = result.scalars().first()
-            return category
+    # async def get_category_by_universal_id(universal_id: str):
+
+    #     async with get_session() as session:
+    #         result = await session.execute(select(Category).filter(Category.universal_id == universal_id))
+    #         category = result.scalars().first()
+    #         return category
         
