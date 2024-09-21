@@ -2,6 +2,8 @@
 
 
 from typing import Annotated
+from bson import ObjectId
+from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, BeforeValidator, Field
 
 
@@ -19,6 +21,9 @@ class CategorySchema(BaseModel):
             "description": "Technology category",
         }
     }
+        jsonable_encoder = {
+            ObjectId: str   
+        }
 
 
 class CategoryResponse(BaseModel):
