@@ -5,6 +5,7 @@ import asyncio
 from aio_pika import Connection, Channel, connect_robust, Message, IncomingMessage
 
 from app.core.config import env_vars
+from app.services.category_service import CategoryService
 
 
 class RabbitMQClient:
@@ -37,7 +38,10 @@ class RabbitMQClient:
         
     async def on_message(self, message: IncomingMessage):
         async with message.process():
-            print(message)
+            routing_key = message.routing_key
+            data = json.loads(message.body.decode('utf-8'))
+            if routing_key == 'create_category':
+                await CategoryService.create_category(data)
             
     async def consume(self, queue_name: str):
         await self.connect()
