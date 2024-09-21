@@ -13,7 +13,6 @@ class UserService:
 
         users = await UserRepository.get_users(skip, size)
         
-        # return users
         return {
             "users": users,
             "page": page,

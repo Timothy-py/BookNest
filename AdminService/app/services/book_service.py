@@ -39,7 +39,6 @@ class BookService:
             # Publish new book to Frontend service
             send_book = {
                 "title": book_dict["title"],
-                "description": book_dict["description"],
                 "author": book_dict["author"],
                 "publisher": book_dict["publisher"],
                 "category_title": title,

@@ -10,7 +10,6 @@ PyObjectId = Annotated[str, BeforeValidator(str)]
 
 class AddBook(BaseModel):
     title: str = Field(..., min_length=1, max_length=250)
-    description: str = Field(..., min_length=3, max_length=250)
     author: str = Field(..., min_length=1, max_length=250)
     publisher: str = Field(..., min_length=3, max_length=250)
     category_id: str 
@@ -32,11 +31,8 @@ class AddBook(BaseModel):
 class BookResponse(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     title: str
-    description: str
     author: str
     publisher: str
     category_id: str
     quantity: int
     is_available: bool
-    # created_at: datetime
-    # updated_at: datetime
