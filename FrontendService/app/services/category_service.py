@@ -1,8 +1,8 @@
 
 
+from sqlalchemy.future import select
 from app.core.database import get_session
 from app.models.category_model import Category
-# from app.repositories.category_repository import CategoryRepository
 
 class CategoryService:
     async def create_category(data:dict):
@@ -12,4 +12,10 @@ class CategoryService:
             await session.commit()
             await session.refresh(new_category)
         return new_category
+    
+    async def get_category_by_title(title: str):
+        async with get_session() as session:
+            result = await session.execute(select(Category).filter(Category.title == title))
+            category = result.scalars().first()
+            return category
         
