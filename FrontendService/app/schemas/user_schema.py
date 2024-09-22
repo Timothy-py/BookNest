@@ -10,15 +10,16 @@ class UserEnrollSchema(BaseModel):
     last_name: str
     
     class Config:
-        orm_mode = True  # for compatibility with SQLAlchemy
+        from_attributes = True  # for compatibility with SQLAlchemy
 
 
 class UserSchema(BaseModel):
     id: int
+    universal_id: str
     email: str
     first_name: str
     last_name: str
     created_at: datetime
 
     class Config:
-        orm_mode = True 
+        from_attributes = True 

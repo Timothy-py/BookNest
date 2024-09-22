@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy import text
@@ -13,6 +14,7 @@ def async_session_generator():
     return sessionmaker(engine, class_=AsyncSession)
 
 
+@asynccontextmanager
 async def get_session() -> AsyncSession:
     async_session = async_session_generator()
     try: 

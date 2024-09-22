@@ -4,9 +4,8 @@ import asyncio
 
 from aio_pika import Connection, Channel, connect_robust, Message, IncomingMessage
 
+from app.services.user_service import UserService
 from app.core.config import env_vars
-from app.services.book_service import BookService
-from app.services.category_service import CategoryService
 
 
 class RabbitMQClient:
@@ -41,12 +40,8 @@ class RabbitMQClient:
         async with message.process():
             routing_key = message.routing_key
             data = json.loads(message.body.decode('utf-8'))
-            if routing_key == 'create_category':
-                await CategoryService.create_category(data)
-            elif routing_key == 'add_book':
-                await BookService.add_book(data)
-            elif routing_key == 'delete_book':
-                await BookService.delete_book(data.get('book_universal_id'))
+            if routing_key == 'user_enroll':
+                await UserService.enroll_user(data)
             
     async def consume(self, queue_name: str):
         await self.connect()
@@ -54,9 +49,8 @@ class RabbitMQClient:
         queue = await channel.declare_queue(queue_name, durable=True)
         await queue.consume(self.on_message, no_ack=False)
         
-    async def start_consume(self, queue_names: list):
-        for queue_name in queue_names:
-            self.consume_task = asyncio.create_task(self.consume(queue_name))
+    async def start_consume(self, queue_name: str):
+        self.consume_task = asyncio.create_task(self.consume(queue_name))
             
     async def close(self):
         if self.channel:
