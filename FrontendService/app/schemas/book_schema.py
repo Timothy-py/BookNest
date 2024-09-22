@@ -1,5 +1,6 @@
 
 
+from datetime import date
 from typing import List
 from pydantic import BaseModel
 
@@ -11,8 +12,8 @@ class BookSchema(BaseModel):
     author: str
     publisher: str
     category_universal_id: str
-    quantity: int
     is_available: bool
+    available_date: date | None
     
     class Config:
         from_attributes = True  # for compatibility with SQLAlchemy

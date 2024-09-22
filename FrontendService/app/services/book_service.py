@@ -1,4 +1,5 @@
 
+from datetime import date
 from fastapi import HTTPException
 from sqlalchemy.future import select
 
@@ -42,4 +43,13 @@ class BookService:
             book = result.scalars().first()
             if book is not None:
                 await session.delete(book)
+                await session.commit()
+
+    async def update_book_availability(id:int, is_available: bool, available_date: date=None):
+        async with get_session() as session:
+            result = await session.execute(select(Book).filter(Book.id == id))
+            book = result.scalars().first()
+            if book is not None:
+                book.is_available = is_available
+                book.available_date = available_date
                 await session.commit()
