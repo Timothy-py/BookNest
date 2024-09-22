@@ -11,7 +11,7 @@ class BookSchema(BaseModel):
     title: str
     author: str
     publisher: str
-    category_universal_id: str
+    category: str
     is_available: bool
     available_date: date | None
     

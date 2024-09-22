@@ -6,7 +6,6 @@ from sqlalchemy.future import select
 
 from app.core.database import get_session
 from app.models.book_model import Book
-from app.services.category_service import CategoryService
 
 
 class BookService:
