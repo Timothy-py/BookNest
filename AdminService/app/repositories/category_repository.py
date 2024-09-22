@@ -13,3 +13,6 @@ class CategoryRepository:
     
     async def get_category_by_universal_id(category_universal_id:str):
         return await category_collection.find_one({"universal_id": category_universal_id})
+    
+    async def get_category_by_id(id:str):
+        return await category_collection.find_one({"_id": ObjectId(oid=id)})

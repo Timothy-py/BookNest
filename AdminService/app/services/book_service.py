@@ -47,7 +47,6 @@ class BookService:
     async def delete_book(book_id, producer:RabbitMQClient):
         # Get book by id
         book = await BookRepository.get_book_by_id(book_id)
-        print(book)
         if book is not None:
             message = json.dumps({"book_universal_id": book["universal_id"]}) 
             await producer.publish("delete_book", message)

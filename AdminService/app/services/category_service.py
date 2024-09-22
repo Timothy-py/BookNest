@@ -20,7 +20,7 @@ class CategoryService:
         
             new_catgory = await CategoryRepository.create_category(category_dict)
             
-            result = await CategoryRepository.get_cagegory_by_id(new_catgory.inserted_id)
+            result = await CategoryRepository.get_category_by_id(new_catgory.inserted_id)
         except DuplicateKeyError:
             raise HTTPException(
                 status_code=409, detail="Category already exists"
