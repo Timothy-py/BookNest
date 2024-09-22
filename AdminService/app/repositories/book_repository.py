@@ -10,6 +10,9 @@ class BookRepository:
 
     async def get_book_by_id(book_id:str) -> dict:
         return await book_collection.find_one(filter={"_id": ObjectId(oid=book_id)})
+    
+    async def get_book_by_universal_id(universal_id:str) -> dict:
+        return await book_collection.find_one({"universal_id": universal_id})
 
     async def delete_book_by_id(book_id:str):
         return await book_collection.delete_one(filter={"_id": ObjectId(oid=book_id)} )

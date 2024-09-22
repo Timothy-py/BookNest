@@ -1,14 +1,10 @@
 
+from datetime import date
 from typing import Annotated, List
 from pydantic import BaseModel, BeforeValidator, EmailStr, Field
 
 
 PyObjectId = Annotated[str, BeforeValidator(str)]
-
-# class UserEnrollSchema(BaseModel):
-#     email: EmailStr
-#     first_name: str
-#     last_name: str
 
 
 class UserSchema(BaseModel):
@@ -17,6 +13,7 @@ class UserSchema(BaseModel):
     email: str
     first_name: str
     last_name: str
+    borrowed_books: list | None = []
     
 
 class PaginatedUserResponseSchema(BaseModel):
