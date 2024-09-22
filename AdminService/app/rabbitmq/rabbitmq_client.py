@@ -4,6 +4,7 @@ import asyncio
 
 from aio_pika import Connection, Channel, connect_robust, Message, IncomingMessage
 
+from app.services.borrow_book_service import BorrowBookService
 from app.services.user_service import UserService
 from app.core.config import env_vars
 
@@ -43,7 +44,7 @@ class RabbitMQClient:
             if routing_key == 'user_enroll':
                 await UserService.enroll_user(data)
             elif routing_key == 'borrow_book':
-                print(data)
+                await BorrowBookService.borrow_book(data)
             
     async def consume(self, queue_name: str):
         await self.connect()

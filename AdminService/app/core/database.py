@@ -12,6 +12,8 @@ book_nest_db = client["book_nest_db"]
 book_collection = book_nest_db["book_collection"]
 user_collection = book_nest_db["user_collection"]
 category_collection = book_nest_db["category_collection"]
+borrow_book_collection = book_nest_db["borrow_book_collection"]
+
 
 # Create unique index
 async def create_indexs():

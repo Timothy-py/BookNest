@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Annotated, List
 
 
@@ -14,6 +15,7 @@ class AddBook(BaseModel):
     publisher: str = Field(..., min_length=3, max_length=250)
     category_universal_id: str 
     is_available: bool = Field(default=True)
+    available_date: date | None = Field(default=None)
 
     class Config:
         json_schema_extra = {
@@ -33,3 +35,4 @@ class BookResponse(BaseModel):
     publisher: str
     category_universal_id: str
     is_available: bool
+    available_date: date | None

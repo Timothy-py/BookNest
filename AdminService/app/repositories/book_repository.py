@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Any
 from bson import ObjectId
 
@@ -12,3 +13,6 @@ class BookRepository:
 
     async def delete_book_by_id(book_id:str):
         return await book_collection.delete_one(filter={"_id": ObjectId(oid=book_id)} )
+    
+    def update_book_availability(universal_id:str, is_available:bool, available_date:date):
+        return book_collection.update_one({"universal_id": universal_id}, {"$set": {"is_available": is_available, "available_date": available_date}})
