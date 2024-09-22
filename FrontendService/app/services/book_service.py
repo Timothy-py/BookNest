@@ -52,3 +52,22 @@ class BookService:
                 book.is_available = is_available
                 book.available_date = available_date
                 await session.commit()
+                
+    async def filter_books(publisher:str, category:str, page:int, size:int):
+        async with get_session() as session:
+            offset = (page - 1) * size
+            query = select(Book)
+            
+            if publisher:
+                query = query.filter(Book.publisher == publisher)
+            if category:
+                query = query.filter(Book.category == category)
+            
+            result = await session.execute(query.offset(offset).limit(size))
+            books = result.scalars().all()
+            
+            return {
+            "books": books,
+            "page": page,
+            "size": size,
+        }

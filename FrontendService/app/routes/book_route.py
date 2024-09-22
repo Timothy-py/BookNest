@@ -24,6 +24,6 @@ async def get_book_by_id(id: int):
 
 
 # Filter books by publisher and/or category
-@book_router.get("/filter", response_model=PaginatedBookResponse, status_code=status.HTTP_200_OK)
+@book_router.get("/search/filter", response_model=PaginatedBookResponse, status_code=status.HTTP_200_OK)
 async def filter_books(publisher: Optional[str] = Query(None), category: Optional[str] = Query(None), page:int=Query(1, ge=1), size:int=Query(10, ge=1, le=100)):
-    return await BookService.filter_books(page, size)
+    return await BookService.filter_books(publisher, category, page, size)
