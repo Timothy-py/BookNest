@@ -9,8 +9,6 @@ from fastapi.encoders import jsonable_encoder
 
 from app.rabbitmq.rabbitmq_client import RabbitMQClient
 from app.repositories.book_repository import BookRepository
-from app.repositories.category_repository import CategoryRepository
-from app.schemas.category_schema import CategorySchema
 
 class BookService:
     async def add_book(data, producer:RabbitMQClient):
@@ -24,11 +22,6 @@ class BookService:
             book_dict["created_at"] = datetime.now()
             book_dict["updated_at"] = datetime.now()
             book_dict["universal_id"] = universal_id
-            
-            # Get category
-            document = await CategoryRepository.get_category_by_universal_id(book_dict["category_universal_id"])
-            if document is None:
-                raise HTTPException(status_code=404, detail="Category not found")
             
             # Save to DB
             new_book = await BookRepository.add_book((book_dict))

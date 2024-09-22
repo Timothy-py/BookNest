@@ -19,7 +19,7 @@ class BorrowBookService:
             "title": book["title"],
             "author": book["author"],
             "publisher": book["publisher"],
-            "category_universal_id": book["category_universal_id"],
+            "category": book["category"],
             "universal_id": book["universal_id"]
         }
         

@@ -13,7 +13,7 @@ class AddBook(BaseModel):
     title: str = Field(..., min_length=1, max_length=250)
     author: str = Field(..., min_length=1, max_length=250)
     publisher: str = Field(..., min_length=3, max_length=250)
-    category_universal_id: str 
+    category: str 
     is_available: bool = Field(default=True)
     available_date: date | None = Field(default=None)
 
@@ -23,7 +23,7 @@ class AddBook(BaseModel):
                 "title": "The Alchemist",
                 "author": "Paulo Coelho",
                 "publisher": "Goodreads",
-                "category_universal_id": "5bf5bb1b-2527-4505-9ec7-a203299d6ecd"
+                "category": "Technology",
             }
         }
 
@@ -33,6 +33,6 @@ class BookResponse(BaseModel):
     title: str
     author: str
     publisher: str
-    category_universal_id: str
+    category: str
     is_available: bool
     available_date: date | None
