@@ -15,3 +15,5 @@ class BorrowBookResponseSchema(BaseModel):
     borrower_universal_id: str
     book_universal_id: str
     return_date: date
+    borrowed_date: date
+    returned: bool

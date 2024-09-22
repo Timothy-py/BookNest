@@ -16,6 +16,8 @@ from app.services.user_service import UserService
 class BorrowBookService:
     async def borrow_book(book_id: int, data: BorrowBookSchema, producer: RabbitMQClient):
         try:
+            current_date = datetime.now().strftime("%Y-%m-%d")
+            current_date_obj = datetime.strptime(current_date, "%Y-%m-%d").date()
             # Get user
             data_dict = jsonable_encoder(data)
             user = await UserService.get_user_by_id(data_dict["user_id"])
@@ -28,7 +30,7 @@ class BorrowBookService:
             
             # Create borrow book
             async with get_session() as session:
-                new_borrow_book = BorrowBook(borrower_universal_id=user.universal_id, book_universal_id=book.universal_id, return_date=data.return_date)
+                new_borrow_book = BorrowBook(borrower_universal_id=user.universal_id, book_universal_id=book.universal_id, return_date=data.return_date, borrowed_date=current_date_obj)
                 session.add(new_borrow_book)
                 await session.commit()
                 await session.refresh(new_borrow_book)
@@ -37,9 +39,9 @@ class BorrowBookService:
             date_obj = datetime.strptime(data_dict["return_date"], "%Y-%m-%d").date()
             await BookService.update_book_availability(book_id, False, date_obj)
         except Exception as e:
-            raise e
+            raise HTTPException(status_code=500, detail=str(e))
         else:
             # Publish borrow book
             date_string = date_obj.strftime("%Y-%m-%d")
-            await producer.publish("borrow_book", json.dumps({"borrower_universal_id": user.universal_id, "book_universal_id": book.universal_id, "return_date": date_string, "returned": False}))
+            await producer.publish("borrow_book", json.dumps({"borrower_universal_id": user.universal_id, "book_universal_id": book.universal_id, "borrowed_date": current_date, "return_date": date_string, "returned": False}))
             return new_borrow_book
