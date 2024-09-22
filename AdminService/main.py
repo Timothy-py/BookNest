@@ -16,7 +16,7 @@ from app.core.dependencies import rabbitmq_client
 async def lifespan(app: FastAPI):
     await connect_to_mongo_db()
     await rabbitmq_client.connect()
-    await rabbitmq_client.start_consume("user_enroll")
+    await rabbitmq_client.start_consume(["user_enroll", "borrow_book"])
     yield
     await close_mongo_db_connection()
     await rabbitmq_client.close()

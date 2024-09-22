@@ -19,7 +19,6 @@ class AddBook(BaseModel):
         json_schema_extra = {
             "example": {
                 "title": "The Alchemist",
-                "description": "The Alchemist is a novel by the English author Paulo Coelho. It was first published in 1988 and has since become one of the most popular novels in the world.",
                 "author": "Paulo Coelho",
                 "publisher": "Goodreads",
                 "category_universal_id": "5bf5bb1b-2527-4505-9ec7-a203299d6ecd"
