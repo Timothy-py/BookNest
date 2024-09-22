@@ -1,14 +1,14 @@
-from datetime import datetime
+from datetime import datetime, date
 import json
-from unicodedata import category
 import uuid
+
+
 from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 
+
 from app.rabbitmq.rabbitmq_client import RabbitMQClient
 from app.repositories.book_repository import BookRepository
-from app.repositories.category_repository import CategoryRepository
-from app.schemas.category_schema import CategorySchema
 
 class BookService:
     async def add_book(data, producer:RabbitMQClient):
@@ -22,11 +22,6 @@ class BookService:
             book_dict["created_at"] = datetime.now()
             book_dict["updated_at"] = datetime.now()
             book_dict["universal_id"] = universal_id
-            
-            # Get category
-            document = await CategoryRepository.get_category_by_universal_id(book_dict["category_universal_id"])
-            if document is None:
-                raise HTTPException(status_code=404, detail="Category not found")
             
             # Save to DB
             new_book = await BookRepository.add_book((book_dict))
@@ -47,9 +42,12 @@ class BookService:
     async def delete_book(book_id, producer:RabbitMQClient):
         # Get book by id
         book = await BookRepository.get_book_by_id(book_id)
-        print(book)
         if book is not None:
             message = json.dumps({"book_universal_id": book["universal_id"]}) 
             await producer.publish("delete_book", message)
             await BookRepository.delete_book_by_id(book_id)
         return
+    
+    # GET UNAVAILABLE BOOKS
+    async def get_unavailable_books(page, size):
+        return await BookRepository.get_unavailable_books(page, size)

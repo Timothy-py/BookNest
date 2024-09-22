@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import close_database, create_tables, ping_database
 from app.routes.user_route import user_router
 from app.routes.book_route import book_router
+from app.routes.borrow_book_route import borrow_book_router
 from app.core.dependencies import rabbitmq_client
 
 
@@ -14,7 +15,7 @@ async def lifespan(app: FastAPI):
     await ping_database()
     await create_tables()
     await rabbitmq_client.connect()
-    await rabbitmq_client.start_consume(["create_category", "add_book", "delete_book"])
+    await rabbitmq_client.start_consume(["add_book", "delete_book"])
     yield
     # Close DB
     await close_database()
@@ -45,3 +46,4 @@ def index():
 
 app.include_router(user_router)
 app.include_router(book_router)
+app.include_router(borrow_book_router)

@@ -6,7 +6,6 @@ from aio_pika import Connection, Channel, connect_robust, Message, IncomingMessa
 
 from app.core.config import env_vars
 from app.services.book_service import BookService
-from app.services.category_service import CategoryService
 
 
 class RabbitMQClient:
@@ -41,9 +40,8 @@ class RabbitMQClient:
         async with message.process():
             routing_key = message.routing_key
             data = json.loads(message.body.decode('utf-8'))
-            if routing_key == 'create_category':
-                await CategoryService.create_category(data)
-            elif routing_key == 'add_book':
+            if routing_key == 'add_book':
+                print(data)
                 await BookService.add_book(data)
             elif routing_key == 'delete_book':
                 await BookService.delete_book(data.get('book_universal_id'))

@@ -8,7 +8,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import close_mongo_db_connection, connect_to_mongo_db
 from app.routes.user_route import user_router
 from app.routes.book_route import book_router
-from app.routes.category_route import category_router
 from app.core.dependencies import rabbitmq_client
 
 
@@ -16,7 +15,7 @@ from app.core.dependencies import rabbitmq_client
 async def lifespan(app: FastAPI):
     await connect_to_mongo_db()
     await rabbitmq_client.connect()
-    await rabbitmq_client.start_consume("user_enroll")
+    await rabbitmq_client.start_consume(["user_enroll", "borrow_book"])
     yield
     await close_mongo_db_connection()
     await rabbitmq_client.close()
@@ -48,4 +47,3 @@ def index():
 
 app.include_router(user_router)
 app.include_router(book_router)
-app.include_router(category_router)

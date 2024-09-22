@@ -2,7 +2,7 @@ import json
 import uuid
 
 
-import sqlalchemy
+from sqlalchemy import select
 from fastapi import HTTPException
 
 
@@ -28,3 +28,11 @@ class UserService:
             data_with_universal_id["universal_id"] = universal_id
             await producer.publish("user_enroll", json.dumps(data_with_universal_id))
             return new_user
+        
+    async def get_user_by_id(id:int):
+        async with get_session() as session:
+            result = await session.execute(select(User).filter(User.id == id))
+            user = result.scalars().first()
+        if user is None:
+            raise HTTPException(status_code=404, detail="User not found")
+        return user

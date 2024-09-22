@@ -1,11 +1,11 @@
 
+from datetime import date
 from fastapi import HTTPException
 from sqlalchemy.future import select
 
 
 from app.core.database import get_session
 from app.models.book_model import Book
-from app.services.category_service import CategoryService
 
 
 class BookService:
@@ -43,3 +43,31 @@ class BookService:
             if book is not None:
                 await session.delete(book)
                 await session.commit()
+
+    async def update_book_availability(id:int, is_available: bool, available_date: date=None):
+        async with get_session() as session:
+            result = await session.execute(select(Book).filter(Book.id == id))
+            book = result.scalars().first()
+            if book is not None:
+                book.is_available = is_available
+                book.available_date = available_date
+                await session.commit()
+                
+    async def filter_books(publisher:str, category:str, page:int, size:int):
+        async with get_session() as session:
+            offset = (page - 1) * size
+            query = select(Book)
+            
+            if publisher:
+                query = query.filter(Book.publisher == publisher)
+            if category:
+                query = query.filter(Book.category == category)
+            
+            result = await session.execute(query.offset(offset).limit(size))
+            books = result.scalars().all()
+            
+            return {
+            "books": books,
+            "page": page,
+            "size": size,
+        }

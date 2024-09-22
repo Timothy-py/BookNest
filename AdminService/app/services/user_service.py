@@ -18,3 +18,13 @@ class UserService:
             "page": page,
             "size": size,
         }
+        
+    async def get_users_with_borrowed_books(page:int, size:int):
+        skip = (page - 1) * size
+        users = await UserRepository.get_users_with_borrowed_books(skip, size)
+        
+        return {
+            "users": users,
+            "page": page,
+            "size": size,
+        }
