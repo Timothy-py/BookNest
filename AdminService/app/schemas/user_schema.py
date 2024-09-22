@@ -13,7 +13,7 @@ class UserSchema(BaseModel):
     email: str
     first_name: str
     last_name: str
-    borrowed_books: list | None = []
+    borrowed_books: List[PyObjectId] | None = []
     
 
 class PaginatedUserResponseSchema(BaseModel):

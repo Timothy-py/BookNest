@@ -47,3 +47,7 @@ class BookService:
             await producer.publish("delete_book", message)
             await BookRepository.delete_book_by_id(book_id)
         return
+    
+    # GET UNAVAILABLE BOOKS
+    async def get_unavailable_books(page, size):
+        return await BookRepository.get_unavailable_books(page, size)

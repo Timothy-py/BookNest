@@ -17,5 +17,13 @@ class BookRepository:
     async def delete_book_by_id(book_id:str):
         return await book_collection.delete_one(filter={"_id": ObjectId(oid=book_id)} )
     
-    def update_book_availability(universal_id:str, is_available:bool, available_date:date):
-        return book_collection.update_one({"universal_id": universal_id}, {"$set": {"is_available": is_available, "available_date": available_date}})
+    async def update_book_availability(universal_id:str, is_available:bool, available_date:date):
+        return await book_collection.update_one({"universal_id": universal_id}, {"$set": {"is_available": is_available, "available_date": available_date}})
+    
+    async def get_unavailable_books(page:int, size:int):
+        skip = (page - 1) * size
+        query = {"is_available": False}
+        
+        books_cursor = book_collection.find(query).skip(skip).limit(size)
+        books = await books_cursor.to_list(length=size)
+        return books
