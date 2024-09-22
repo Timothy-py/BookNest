@@ -41,5 +41,5 @@ class BorrowBookService:
         else:
             # Publish borrow book
             date_string = date_obj.strftime("%Y-%m-%d")
-            await producer.publish("borrow_book", json.dumps({"borrower_universal_id": user.universal_id, "book_universal_id": book.universal_id, "return_date": date_string}))
+            await producer.publish("borrow_book", json.dumps({"borrower_universal_id": user.universal_id, "book_universal_id": book.universal_id, "return_date": date_string, "returned": False}))
             return new_borrow_book

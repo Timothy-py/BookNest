@@ -1,6 +1,6 @@
 
 
-from sqlalchemy import Column, Date, Integer, String
+from sqlalchemy import Boolean, Column, Date, Integer, String
 from app.core.database import Base
 
 
@@ -10,3 +10,4 @@ class BorrowBook(Base):
     borrower_universal_id = Column(String, nullable=False)
     book_universal_id = Column(String, nullable=False)
     return_date = Column(Date, nullable=False)
+    returned = Column(Boolean, default=False)
