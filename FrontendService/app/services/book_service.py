@@ -4,13 +4,13 @@ from fastapi import HTTPException
 from sqlalchemy.future import select
 
 
-from app.core.database import get_session
+from app.core.database import database
 from app.models.book_model import Book
 
 
 class BookService:
     async def add_book(data: dict):
-        async with get_session() as session:
+        async with database.get_session() as session:
             new_book = Book(**data)
             session.add(new_book)
             await session.commit()
@@ -19,7 +19,7 @@ class BookService:
     
     async def list_books(page:int, size:int):
         skip = (page - 1) * size
-        async with get_session() as session:
+        async with database.get_session() as session:
             result = await session.execute(select(Book).offset(skip).limit(size))
             books = result.scalars().all()
         return {
@@ -29,7 +29,7 @@ class BookService:
         }
         
     async def get_book_by_id(id: int):
-        async with get_session() as session:
+        async with database.get_session() as session:
             result = await session.execute(select(Book).filter(Book.id == id))
             book = result.scalars().first()
         if book is None:
@@ -37,7 +37,7 @@ class BookService:
         return book
     
     async def delete_book(book_universal_id: str):
-        async with get_session() as session:
+        async with database.get_session() as session:
             result = await session.execute(select(Book).filter(Book.universal_id == book_universal_id))
             book = result.scalars().first()
             if book is not None:
@@ -45,7 +45,7 @@ class BookService:
                 await session.commit()
 
     async def update_book_availability(id:int, is_available: bool, available_date: date=None):
-        async with get_session() as session:
+        async with database.get_session() as session:
             result = await session.execute(select(Book).filter(Book.id == id))
             book = result.scalars().first()
             if book is not None:
@@ -54,7 +54,7 @@ class BookService:
                 await session.commit()
                 
     async def filter_books(publisher:str, category:str, page:int, size:int):
-        async with get_session() as session:
+        async with database.get_session() as session:
             offset = (page - 1) * size
             query = select(Book)
             

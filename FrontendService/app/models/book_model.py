@@ -1,7 +1,9 @@
 
 from sqlalchemy import Boolean, Column, Date, Integer, String, DateTime, func
 
-from app.core.database import Base
+from app.core.database import database
+
+Base = database.Base
 
 
 class Book(Base):
