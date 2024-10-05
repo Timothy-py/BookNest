@@ -9,6 +9,6 @@ RUN pip install --no-cache-dir  --upgrade -r /frontend/requirements.txt
 COPY ./app /frontend/app
 COPY ./main.py /frontend/main.py
 
-EXPOSE 3000
+EXPOSE 8081
 
-CMD [ "fastapi", "run", "/frontend/main.py", "--port", "3000" ]
+CMD [ "fastapi", "run", "/frontend/main.py", "--port", "8081" ]

@@ -17,12 +17,12 @@ services:
     depends_on:
       - "mongo"
       - "rabbitmq"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://rabbitmq:15673"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://rabbitmq:15673"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 30s
   
   frontend_service:
     build: 
@@ -31,12 +31,14 @@ services:
     container_name: booknest_frontend_service
     restart: always
     ports:
-      - "3000:3000"
+      - "8081:8081"
     env_file:
       - .env
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - AMQP_URL=${AMQP_URL}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - SUPERUSER_DATABASE_URL=${SUPERUSER_DATABASE_URL}
     depends_on:
       - "postgres"
       - "rabbitmq"
@@ -66,7 +68,7 @@ services:
       # start_period: 30s
   
   postgres:
-    image: postgres
+    image: postgres:17
     container_name: postgres
     ports:
       - "5433:5432"
@@ -75,7 +77,10 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=${DATABASE_URL}
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=plati442
+      - POSTGRES_DB=postgres
+      # - POSTGRES_HOST_AUTH_METHOD=trust
     # healthcheck:
     #   test: ["CMD-SHELL", "pg_isready -U postgres"]
     #   interval: 10s
