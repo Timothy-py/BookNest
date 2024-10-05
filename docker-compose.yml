@@ -1,0 +1,105 @@
+version: '3.8'
+
+services:
+  admin_service:
+    build: 
+      context: ./AdminService
+      dockerfile: Dockerfile
+    container_name: booknest_admin_service
+    restart: always
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - MONGODB_URL=${MONGODB_URL}
+      - AMQP_URL=${AMQP_URL}
+    depends_on:
+      - "mongo"
+      - "rabbitmq"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://rabbitmq:15673"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+  
+  frontend_service:
+    build: 
+      context: ./FrontendService
+      dockerfile: Dockerfile
+    container_name: booknest_frontend_service
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - AMQP_URL=${AMQP_URL}
+    depends_on:
+      - "postgres"
+      - "rabbitmq"
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://postgres:5433"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+    #   start_period: 30s
+  
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+    env_file:
+      - .env
+    environment:
+      - MONGODB_URL=${MONGODB_URL}
+    # healthcheck:
+    #   test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+    #   interval: 10s
+    #   timeout: 10s
+    #   retries: 5
+      # start_period: 30s
+  
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U postgres"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+    #   start_period: 30s
+  
+  rabbitmq:
+    image: rabbitmq
+    container_name: rabbitmq
+    ports:
+      - "5673:5672"
+      - "15673:15672" # Management console
+    env_file:
+      - .env
+    environment:
+      - AMQP_URL=${AMQP_URL}
+    # healthcheck:
+    #   test: ["CMD", "rabbitmq-diagnostics", "ping"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 5
+    #   start_period: 30s
+    
+volumes:
+  mongo-data:
+  postgres-data:

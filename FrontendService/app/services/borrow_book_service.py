@@ -6,12 +6,14 @@ from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 
 
-from app.core.database import get_session
+from app.core.database import database
 from app.core.dependencies import RabbitMQClient
 from app.models.borrow_book_model import BorrowBook
 from app.schemas.borrow_book_schema import BorrowBookSchema
 from app.services.book_service import BookService
 from app.services.user_service import UserService
+
+db_session = database.get_session()
 
 class BorrowBookService:
     async def borrow_book(book_id: int, data: BorrowBookSchema, producer: RabbitMQClient):
@@ -29,7 +31,7 @@ class BorrowBookService:
                 raise HTTPException(status_code=400, detail="Book is not available")
             
             # Create borrow book
-            async with get_session() as session:
+            async with db_session as session:
                 new_borrow_book = BorrowBook(borrower_universal_id=user.universal_id, book_universal_id=book.universal_id, return_date=data.return_date, borrowed_date=current_date_obj)
                 session.add(new_borrow_book)
                 await session.commit()
