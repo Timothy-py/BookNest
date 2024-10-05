@@ -14,10 +14,11 @@ from app.schemas.user_schema import UserEnrollSchema
 from app.core.dependencies import RabbitMQClient
 
 
+db_session = database.get_session()
 
 class UserService:
     async def enroll_user(producer: RabbitMQClient, data: UserEnrollSchema):
-        async with database.get_session() as session:
+        async with db_session as session:
             new_user = User(email=data.email, first_name=data.first_name, last_name=data.last_name, universal_id=str(uuid.uuid4()))
             session.add(new_user)
             try:
@@ -33,7 +34,7 @@ class UserService:
         
     async def get_user_by_id(id: int) -> User:
         """Get a user by ID"""
-        async with database.get_session() as session:
+        async with db_session as session:
             result = await session.execute(select(User).filter(User.id == id))
             user = result.scalars().first()
         

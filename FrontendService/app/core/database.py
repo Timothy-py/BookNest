@@ -11,7 +11,6 @@ class Database:
     def __init__(self):
         self.engine = create_async_engine(env_vars.DATABASE_URL, echo=True, future=True)
         self.Base = declarative_base()
-        self.async_session_generator = sessionmaker(self.engine, class_=AsyncSession)
         
     # create database if not exist
     async def create_database(self, database_name: str):
@@ -33,9 +32,11 @@ class Database:
 
     @asynccontextmanager
     async def get_session(self) -> AsyncSession:
-        async_session = self.async_session_generator()
+        async_session = sessionmaker(self.engine, class_=AsyncSession)
+        session = None
         try:
-            async with async_session() as session:
+            session = async_session()
+            async with session:
                 yield session
         except Exception as e:
             await session.rollback()
@@ -48,7 +49,7 @@ class Database:
         try:
             async with self.engine.connect() as conn:
                 await conn.execute(text("SELECT 1"))
-            print("Successfully connected to the Database database!")
+            print("Successfully connected to the Database!")
         except Exception as e:
             print(f"Error connecting to database: {e}")
 
