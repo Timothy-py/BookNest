@@ -41,7 +41,6 @@ class RabbitMQClient:
             routing_key = message.routing_key
             data = json.loads(message.body.decode('utf-8'))
             if routing_key == 'add_book':
-                print(data)
                 await BookService.add_book(data)
             elif routing_key == 'delete_book':
                 await BookService.delete_book(data.get('book_universal_id'))
