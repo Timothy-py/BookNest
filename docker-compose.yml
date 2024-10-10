@@ -78,7 +78,7 @@ services:
       - .env
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=plati442
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=postgres
       # - POSTGRES_HOST_AUTH_METHOD=trust
     # healthcheck:
