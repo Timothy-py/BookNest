@@ -1,6 +1,4 @@
-import asyncio
 from contextlib import asynccontextmanager
-import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,6 +7,7 @@ from app.core.database import close_mongo_db_connection, connect_to_mongo_db
 from app.routes.user_route import user_router
 from app.routes.book_route import book_router
 from app.core.dependencies import rabbitmq_client
+from app.utils.logger import logger
 
 
 @asynccontextmanager
@@ -30,6 +29,7 @@ app = FastAPI(
     redoc_url="/redoc",
     openapi_url="/openapi.json",
 )
+logger.info("Booknest Admin API Service starting...")
 
 app.add_middleware(
     CORSMiddleware,
